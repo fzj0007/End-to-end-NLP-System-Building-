@@ -1,10 +1,10 @@
-# CMU Advanced NLP Assignment 2: End-to-end NLP System Building
+# Assignment 2: End-to-end NLP System Building
 
-Large language models (LLMs) such as Llama2 have been shown effective for question-answering ([Touvron et al., 2023](https://arxiv.org/abs/2307.09288)), however, they are often limited by their knowledge in certain domains. A common technique here is to augment LLM's knowledge with documents that are relevant to the question. In this assignment, you will *develop a retrieval augmented generation system (RAG)* ([Lewis et al., 2021](https://arxiv.org/abs/2005.11401)) that's capable of answering questions about the [Language Technology Institute](https://lti.cs.cmu.edu) (LTI) and [Carnegie Mellon University](https://www.cmu.edu) (CMU).
+Large language models (LLMs) such as Llama2 have been shown effective for question-answering ([Touvron et al., 2023](https://arxiv.org/abs/2307.09288)), however, they are often limited by their knowledge in certain domains. A common technique here is to augment LLM's knowledge with documents that are relevant to the question. In this assignment, you will *develop a retrieval augmented generation system (RAG)* ([Lewis et al., 2021](https://arxiv.org/abs/2005.11401)) that's capable of answering questions about a **domain of your choice**.
 
 ```
-Q: Who is offering the Advanced NLP course in Spring 2024?
-A: Graham Neubig
+Q: Who is the CEO of [organization]?
+A: [Name]
 ```
 
 So far in your machine learning classes, you may have experimented with standardized tasks and datasets that were easily accessible. However, in the real world, NLP practitioners often have to solve a problem from scratch (like this one!). This includes gathering and cleaning data, annotating your data, choosing a model, iterating on the model, and possibly going back to change your data. In this assignment, you'll get to experience this full process.
@@ -14,6 +14,7 @@ Please note that you'll be building your own system end-to-end for this assignme
 The key checkpoints for this assignment are,
 
 - [ ] [Understand the task specification](#task-retrieval-augmented-generation-rag)
+- [ ] [Choose your domain](#choosing-your-domain)
 - [ ] [Prepare your raw data](#preparing-raw-data)
 - [ ] [Annotate data for model development](#annotating-data)
 - [ ] [Develop a retrieval augmented generation system](#developing-your-rag-system)
@@ -21,11 +22,11 @@ The key checkpoints for this assignment are,
 - [ ] [Write a report](#writing-report)
 - [ ] [Submit your work](#submission--grading)
 
-All deliverables are due by **Tuesday, March 12th**. This is a group assignment, see the assignment policies for this class.[^1]
+All deliverables are due by **[Deadline TBD]**. This is a group assignment, see the assignment policies for this class.[^1]
 
 ## Task: Retrieval Augmented Generation (RAG)
 
-You'll be working on the task of factual question-answering (QA). We will focus specifically on questions about various facts concerning LTI and CMU. Since existing QA systems might not have the necessary knowledge in this domain, you will need to augment each question with relevant documents. Given an input question, your system will first retrieve documents and use those documents to generate an answer.
+You'll be working on the task of factual question-answering (QA). We will focus specifically on questions about facts within your chosen domain. Since existing QA systems might not have the necessary knowledge in this domain, you will need to augment each question with relevant documents. Given an input question, your system will first retrieve documents and use those documents to generate an answer.
 
 ### Data Format
 
@@ -37,36 +38,41 @@ You'll be working on the task of factual question-answering (QA). We will focus 
 
 Read our [model and data policy](#model-and-data-policy) for this assignment.
 
+## Choosing Your Domain
+
+You are free to choose any domain for this assignment, as long as it satisfies the following criteria:
+
++ **Publicly accessible**: All source documents must be publicly available online or through open APIs.
++ **Rich in factual content**: The domain should contain enough structured, factual information to support at least 100 question–answer pairs.
++ **Knowledge gap**: The domain should contain facts that a vanilla LLM would struggle to answer correctly — e.g., niche organizational details, recent events, or specialized knowledge not well represented in pretraining data.
+
+Some example domain categories:
++ A specific organization, institution, or research group (e.g., a university department, NGO, or company)
++ A scientific field or subfield (e.g., a niche area of biology, medicine, or engineering)
++ A legal or policy domain (e.g., a country's regulatory framework)
++ A cultural or historical domain (e.g., a city's history, a cultural movement)
++ A technology product or software ecosystem (e.g., a popular open-source library)
+
+> **Note:** You must briefly describe and justify your domain choice in your report, including why RAG is needed for this domain.
+
 ## Preparing raw data
 
 ### Compiling a knowledge resource
 
-For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the following,
+For your test set and the RAG system, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource. Your knowledge resource may include a mix of document types such as:
 
-+ Faculty @ LTI
-    - List of faculty ([LTI faculty directory](https://lti.cs.cmu.edu/people/faculty/index.html)). Limit to "Core Faculty" for this assignment.
-    - Research papers by LTI faculty and their metadata ([Semantic Scholar API](https://www.semanticscholar.org/product/api)). Limit your resource to open access papers published in 2023. Include both the paper and its metadata. You can limit the metadata to title, abstract, authors, publication venue, year and tldr. 
-    - Teaching (see below)
-+ Courses @ CMU
-    - Courses offered by each department at CMU and their metadata such as instructors, locations, and credits. ([Schedule of Classes](https://enr-apps.as.cmu.edu/open/SOC/SOCServlet/completeSchedule))
-    - Academic calendars for 2023-2024 and 2024-2025 ([CMU calendar](https://www.cmu.edu/hub/calendar/))
-+ Academics @ LTI
-    - Programs offered by LTI ([website](https://lti.cs.cmu.edu/academics/index.html)). Navigate to individual program webpages to find program overview, requirements and curriculum etc.,
-    - Program handbooks for information on curriculum, requirements and staff ([PhD](https://lti.cs.cmu.edu/academics/phd-programs/files/handbook_phd_2023-2024.pdf), [MLT](https://lti.cs.cmu.edu/academics/masters-programs/files/mlt-student-handbook-2023-2024.pdf), [MIIS](https://lti.cs.cmu.edu/academics/masters-programs/files/miis-handbook_2023-2024.pdf), [MCDS](https://lti.cs.cmu.edu/academics/masters-programs/files/mcds-student-handbook-2023_2024.pdf), [MSAII](https://lti.cs.cmu.edu/academics/masters-programs/files/handbook-msaii-2022-2023.pdf))
-+ Events @ CMU
-    - Spring carnival and reunion weekend 2024 ([schedule](https://web.cvent.com/event/ab7f7aba-4e7c-4637-a1fc-dd1f608702c4/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce?locale=en))
-    - Commencement 2024 ([schedule](https://www.cmu.edu/commencement/schedule/index.html))
-+ History @ SCS and CMU
-    - School of Computer Science ([25 great things](https://www.cs.cmu.edu/scs25/25things), [history](https://www.cs.cmu.edu/scs25/history))
-    - [CMU fact sheet](https://www.cmu.edu/about/cmu_fact_sheet_02.pdf) and [history](https://www.cmu.edu/about/history.html)
-    - Buggy and it's history ([article](https://www.cmu.edu/news/stories/archives/2019/april/spring-carnival-buggy.html))
-    - Athletics ([Tartans](https://athletics.cmu.edu/athletics/tartanfacts), [Scotty](https://athletics.cmu.edu/athletics/mascot/about), [Kiltie Band](https://athletics.cmu.edu/athletics/kiltieband/index))
++ Web pages (organizational websites, wikis, documentation)
++ PDF documents (reports, handbooks, research papers)
++ Structured data from APIs (e.g., research paper metadata, government databases)
++ Plain text files
+
+Aim to collect **at least 100 documents** (or equivalent chunks) that cover the breadth of your domain.
 
 ### Collecting raw data
 
-Your knowledge resource might include a mix of HTML pages, PDFs, and plain text documents. You will need to clean this data and convert it into a file format that suites your model development. Here are some tools that you could use,
+Your knowledge resource might include a mix of HTML pages, PDFs, and plain text documents. You will need to clean this data and convert it into a file format that suits your model development. Here are some tools that you could use:
 
-+ For all things related to published research, you can use the [Semantic Scholar API](https://www.semanticscholar.org/product/api) to collect papers and their metadata.
++ For research papers and their metadata, you can use the [Semantic Scholar API](https://www.semanticscholar.org/product/api).
 + To parse PDF documents into plain text, you can use [pypdf](https://github.com/py-pdf/pypdf) or [pdfplumber](https://github.com/jsvine/pdfplumber).
 + To process HTML pages, you can use [beautifulsoup4](https://pypi.org/project/beautifulsoup4/).
 
@@ -78,23 +84,23 @@ Next, you will want to annotate question-answer pairs for two purposes: testing/
 
 ### Test data
 
-The testing (and analysis) data will be the data that you use to make sure that your system is working properly. In order to do so, you will want to annotate enough data so that you can get an accurate estimate of how your system is doing, and if any improvements to your system are having a positive impact. Some guidelines on this,
+The testing (and analysis) data will be the data that you use to make sure that your system is working properly. In order to do so, you will want to annotate enough data so that you can get an accurate estimate of how your system is doing, and if any improvements to your system are having a positive impact. Some guidelines on this:
 
-+ *Domain Relevance*: Your test data should be similar to the data that you will finally be tested on (questions about LTI and CMU). Use the knowledge resources mentioned above to curate your test set.
-+ *Diversity*: Your test data should cover a wide range of questions about LTI and CMU.
++ *Domain Relevance*: Your test data should be similar to the data that you will finally be tested on (questions about your chosen domain). Use the knowledge resources you compiled to curate your test set.
++ *Diversity*: Your test data should cover a wide range of questions about your domain.
 + *Size*: Your test data should be large enough to distinguish between good and bad models. If you want some guidelines about this, see the lecture on experimental design and human annotation.[^2]
 + *Quality*: Your test data should be of high quality. We recommend that you annotate it yourself and validate your annotations within your team.
 
-To help you get started, here are some example questions,
+To help you get started, here are some example question types to include:
 
-+ Questions that could be answered by just prompting a LLM
-    - When was Carnegie Mellon University founded?
-+ Questions that can be better answered by augmenting LLM with relevant documents
-    - Who is the president of CMU?
++ Questions that could be answered by just prompting an LLM
+    - When was [organization] founded?
++ Questions that can be better answered by augmenting an LLM with relevant documents
+    - Who is the current president/director of [organization]?
 + Questions that are likely answered only through augmentation
-    - What courses are offered by Graham Neubig at CMU?
+    - What specific programs or services does [organization] offer?
 + Questions that are sensitive to temporal signals
-    - Who is teaching 11-711 in Spring 2024?
+    - What is [organization]'s current policy on [topic]?
 
 See [Vu et al., 2023](https://arxiv.org/abs/2310.03214) for ideas about questions to prompt LLMs. For questions with multiple valid answers, you can include multiple reference answers per line in `reference_answers.txt` (separated by a semicolon `;`). As long as your system generates one of the valid answers, it will be considered correct.
 
@@ -108,7 +114,7 @@ The choice of training data is a bit more flexible, and depends on your implemen
 + Do some sort of automatic annotation and/or data augmentation.
 + Use existing datasets for transfer learning.
 
-If you are using a LLM in a few-shot learning setting, you could possibly:
+If you are using an LLM in a few-shot learning setting, you could possibly:
 
 + Annotate examples for the task using the same method as the test set.
 + Use existing datasets to identify examples for in-context learning.
@@ -123,7 +129,7 @@ An important component of every data annotation effort is to estimate its qualit
 
 Unlike assignment 1, there is no starter code for this assignment. You are *free to use any open-source model and library*, just make sure you provide due credit in your report. See our [model policy](#model-and-data-policy).
 
-For your RAG system, you will need the following three components, 
+For your RAG system, you will need the following three components:
 
 1. Document & query embedder
 2. Document retriever
@@ -131,9 +137,8 @@ For your RAG system, you will need the following three components, 
 
 To get started, you can try langchain's RAG stack that utilizes GPT4All, Chroma and Llama2 ([langchain docs](https://python.langchain.com/docs/use_cases/question_answering/local_retrieval_qa)).
 
-Some additional resources that could be useful,
+Some additional resources that could be useful:
 
-+ [11711 lecture notes](http://www.phontron.com/class/anlp2024/lectures/#retrieval-and-rag-feb-15)
 + [ACL 2023 tutorial on retrieval-augmented LMs](https://acl2023-retrieval-lm.github.io)
 + [llama-recipes](https://github.com/facebookresearch/llama-recipes/tree/main/demo_apps/RAG_Chatbot_example) for an example RAG chatbot with Llama2.
 + [Ollama](https://github.com/ollama/ollama) or [llama.cpp](https://github.com/ggerganov/llama.cpp) to run LLMs locally on your machine.
@@ -142,11 +147,11 @@ All the code for your data preprocessing, model development and evaluation will 
 
 ## Generating results
 
-Finally, you will run your systems on our test set (questions only) and submit your results to us. This test set will be released on **Monday, March 11th**.
+Finally, you will run your systems on our test set (questions only) and submit your results to us. This test set will be released a few days before the assignment deadline.
 
 ### Unseen test set
 
-This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about LTI and CMU. Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
+This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about your chosen domain. Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
 
 ### Evaluation metrics
 
@@ -165,7 +170,7 @@ There will be a 7 page limit for the report, and there is no required template. 
 
 ### Submission
 
-Submit all deliverables on Canvas. Your submission checklist is below,
+Submit all deliverables on Canvas. Your submission checklist is below:
 
 - [ ] Your report.
 - [ ] A link to your GitHub repository containing your code.[^3]
@@ -201,10 +206,11 @@ ANDREWID/
 The following points (max. 100 points) are derived from the results and your report. See course grading policy.[^4]
 
 + **Submit data** (15 points): submit testing/training data of your creation.
-+ **Submit code** (15 points): submit your code for preprocessing and model development in the form of a GitHub repo. We may not necessarily run your code, but we will look at it. So please ensure that it contains up-to-date code with a README file outlining the steps to run it. Your repo 
++ **Submit code** (15 points): submit your code for preprocessing and model development in the form of a GitHub repo. We may not necessarily run your code, but we will look at it. So please ensure that it contains up-to-date code with a README file outlining the steps to run it.
 + **Results** (30 points): points based on your system's performance on our private test set. 10 points for non-trivial performance,[^5] plus up to 20 points based on level of performance relative to other submissions from the class.
 + **Report**: below points are awarded based on your report.
-    + **Data creation** (10 points): clearly describe how you created your data. Please include the following details,
+    + **Domain & Data creation** (10 points): clearly describe your chosen domain and how you created your data. Please include the following details,
+        - What domain did you choose and why? Why is RAG needed for this domain?
         - How did you compile your knowledge resource, and how did you decide which documents to include?
         - How did you extract raw data? What tools did you use?
         - What data was annotated for testing and training (what kind and how much)?
@@ -215,17 +221,17 @@ The following points (max. 100 points) are derived from the results and your rep
     + **Model details** (10 points): clearly describe your model(s). Please include the following details,
         - What kind of methods (including baselines) did you try? Explain at least two variations (more is welcome). This can include which model you used, which data it was trained on, training strategy, etc.
         - What was your justification for trying these methods?
-    + **Results** (10 points): report raw numbers from your experiments. Please include the following details,        
+    + **Results** (10 points): report raw numbers from your experiments. Please include the following details,
         - What was the result of each model that you tried on the testing data that you created?
         - Are the results statistically significant?
     + **Analysis** (10 points): perform quantitative/qualitative analysis and present your findings,
         - Perform a comparison of the outputs on a more fine-grained level than just holistic accuracy numbers, and report the results. For instance, how did your models perform across various types of questions?
         - Perform an analysis that evaluates the effectiveness of retrieve-and-augment strategy vs closed-book use of your models.
         - Show examples of outputs from at least two of the systems you created. Ideally, these examples could be representative of the quantitative differences that you found above.
- 
+
 ## Model and Data Policy
 
-To make the assignment accessible to everyone,
+To make the assignment accessible to everyone:
 
 + You are only allowed to use models that are also accessible through [HuggingFace](https://huggingface.co/models). This means you may *not* use closed models like OpenAI models, but you *can* opt to use a hosting service for an open model (such as the Hugging Face or Together APIs).
 + You are only allowed to include publicly available data in your knowledge resource, test data and training data.
@@ -233,24 +239,14 @@ To make the assignment accessible to everyone,
 
 If you have any questions about whether a model or data is allowed, please ask on Piazza.
 
-## Acknowledgements
-
-This assignment was based on the the [Fall 2023 version of this assignment](https://github.com/cmu-anlp/nlp-from-scratch-assignment-2023/tree/main).
-
 ## References
 
 + Lewis et al., 2021. [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401).
 + Touvron et al., 2023. [Llama 2: Open Foundation and Fine-Tuned Chat Models](https://arxiv.org/abs/2307.09288).
 + Vu et al., 2023. [FreshLLMs: Refreshing Large Language Models with Search Engine Augmentation](https://arxiv.org/abs/2310.03214).
 
-
-
-[^1]: See the [assignment policies](http://www.phontron.com/class/anlp2024/assignments/#assignment-policies) for this class, including submission information, late day policy and more.
-
-[^2]: See the [lecture notes](http://www.phontron.com/class/anlp2024/lectures/#experimental-design-and-human-annotation-feb-13) on experimental design and human annotation for guidance on annotation, size of test/train data, and general experimental design.
-
-[^3]: Create a private GitHub repo and give access to the TAs in charge of this assignment by the deadline. See piazza announcement post for our GitHub usernames.
-
-[^4]: Grading policy: http://www.phontron.com/class/anlp2024/course_details/#grading
-
+[^1]: See the assignment policies for this class, including submission information, late day policy and more.
+[^2]: See the lecture notes on experimental design and human annotation for guidance on annotation, size of test/train data, and general experimental design.
+[^3]: Create a private GitHub repo and give access to the TAs in charge of this assignment by the deadline. See the course announcement for GitHub usernames.
+[^4]: See the course grading policy for details.
 [^5]: In general, if your system is generating answers that are relevant to the question, it would be considered non-trivial. This could be achieved with a basic RAG system.
