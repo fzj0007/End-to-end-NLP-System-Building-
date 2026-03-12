@@ -22,7 +22,7 @@ The key checkpoints for this assignment are,
 - [ ] [Write a report](#writing-report)
 - [ ] [Submit your work](#submission--grading)
 
-All deliverables are due by **[Deadline TBD]**. This is a group assignment, see the assignment policies for this class.[^1]
+All deliverables are due by **April 5**. This is a group assignment, see the assignment policies for this class.[^1]
 
 ## Task: Retrieval Augmented Generation (RAG)
 
@@ -180,10 +180,10 @@ Submit all deliverables on Canvas. Your submission checklist is below:
 - [ ] Testing and training data you annotated for this assignment.
 - [ ] Your system outputs on our test set.
 
-Your submission should be a zip file with the following structure (assuming the lowercase Andrew ID is ANDREWID). Make one submission per team.
+Your submission should be a zip file with the following structure (assuming the lowercase Bronco ID is BID). Make one submission per team.
 
 ```
-ANDREWID/
+BID/
 ├── report.pdf
 ├── github_url.txt
 ├── contributions.md
