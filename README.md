@@ -247,6 +247,6 @@ If you have any questions about whether a model or data is allowed, please ask o
 
 [^1]: See the assignment policies for this class, including submission information, late day policy and more.
 [^2]: See the lecture notes on experimental design and human annotation for guidance on annotation, size of test/train data, and general experimental design.
-[^3]: Create a private GitHub repo and give access to the TAs in charge of this assignment by the deadline. See the course announcement for GitHub usernames.
+[^3]: Create a private GitHub repo and give access to fzj0007 by the deadline.
 [^4]: See the course grading policy for details.
 [^5]: In general, if your system is generating answers that are relevant to the question, it would be considered non-trivial. This could be achieved with a basic RAG system.
