@@ -9,7 +9,7 @@ A: [Name]
 
 So far in your machine learning classes, you may have experimented with standardized tasks and datasets that were easily accessible. However, in the real world, NLP practitioners often have to solve a problem from scratch (like this one!). This includes gathering and cleaning data, annotating your data, choosing a model, iterating on the model, and possibly going back to change your data. In this assignment, you'll get to experience this full process.
 
-Please note that you'll be building your own system end-to-end for this assignment, and *there is no starter code*. You must collect your own data and develop a model of your choice on the data. We will be releasing the inputs for the test set a few days before the assignment deadline, and you will run your already-constructed system over this data and submit the results. We also ask you to follow several experimental best practices, and describe the result in your report.
+Please note that you'll be building your own system end-to-end for this assignment, and *there is no starter code*. You must collect your own data and develop a model of your choice on the data.
 
 The key checkpoints for this assignment are,
 
@@ -22,7 +22,7 @@ The key checkpoints for this assignment are,
 - [ ] [Write a report](#writing-report)
 - [ ] [Submit your work](#submission--grading)
 
-All deliverables are due by **April 5**. This is a group assignment, see the assignment policies for this class.[^1]
+All deliverables are due by **April 17**. This is a **group assignment**, see the assignment policies for this class.[^1]
 
 ## Task: Retrieval Augmented Generation (RAG)
 
@@ -43,7 +43,7 @@ Read our [model and data policy](#model-and-data-policy) for this assignment.
 You are free to choose any domain for this assignment, as long as it satisfies the following criteria:
 
 + **Publicly accessible**: All source documents must be publicly available online or through open APIs.
-+ **Rich in factual content**: The domain should contain enough structured, factual information to support at least 100 question–answer pairs.
++ **Rich in factual content**: The domain should contain enough structured, factual information to support at least 30 question–answer pairs.
 + **Knowledge gap**: The domain should contain facts that a vanilla LLM would struggle to answer correctly — e.g., niche organizational details, recent events, or specialized knowledge not well represented in pretraining data.
 
 Some example domain categories:
@@ -65,8 +65,6 @@ For your test set and the RAG system, you will first need to compile a knowledge
 + PDF documents (reports, handbooks, research papers)
 + Structured data from APIs (e.g., research paper metadata, government databases)
 + Plain text files
-
-Aim to collect **at least 100 documents** (or equivalent chunks) that cover the breadth of your domain.
 
 ### Collecting raw data
 
@@ -161,7 +159,7 @@ Your submissions will be evaluated on standard metrics, answer recall, exact mat
 
 We ask you to write a report detailing various aspects about your end-to-end system development (see the grading criteria below).
 
-There will be a 7 page limit for the report, and there is no required template. However, we encourage you to use the [ACL template](https://github.com/acl-org/acl-style-files).
+There will be a no page limit for the report, and there is no required template. However, we encourage you to use the [ACL template](https://github.com/acl-org/acl-style-files).
 
 > [!IMPORTANT]
 > Make sure you cite all your sources (open-source models, libraries, papers, blogs etc.,) in your report.
