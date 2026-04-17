@@ -235,7 +235,7 @@ To make the assignment accessible to everyone:
 + You are only allowed to include publicly available data in your knowledge resource, test data and training data.
 + You are welcome to use any open-source library to assist your data annotation and model development. Make sure you check the license and provide due credit.
 
-If you have any questions about whether a model or data is allowed, please ask on Piazza.
+If you have any questions about whether a model or data is allowed, please ask on Discord.
 
 ## References
 
